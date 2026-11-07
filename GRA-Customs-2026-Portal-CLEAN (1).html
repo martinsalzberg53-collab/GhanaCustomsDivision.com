@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GRA Customs Division — 2026 Recruitment Portal</title>
+<meta name="description" content="Demo recruitment portal for the Ghana Revenue Authority, Customs Division. Applications close Sunday, 8 November 2026 at 10:00 AM GMT.">
+
+<!--
+  ============================================================
+  HOW TO WIRE UP THE LINKS (for the person handling hrefs)
+  ------------------------------------------------------------
+  Every link and button in this file uses href="#" on purpose.
+  Search for  TODO: LINK  to find each one.
+
+  IMAGES: this file uses 3 photos, kept as separate files so the
+  code stays readable (instead of 1MB of base64 pasted inline).
+  Keep them in the same folder structure when you deploy:
+    images/hero-officers-on-duty.jpg  — hero background
+    images/officers-in-accra.png      — Why Join section
+    images/ghana-flag-tema-port.jpg   — Duty stations section The list:
+
+    1. Header nav:        #positions, #eligibility, #how, #faq, #fraud
+    2. Header CTA:        #apply
+    3. Hero CTAs:         #apply, #positions
+    4. Position cards:    one "Use this position" button per card
+    5. Footer quick links: #positions, #eligibility, #how, #apply
+
+  Replace "#" with the real destination. Nothing else in the
+  file depends on those hrefs, so changing them is safe.
+  ============================================================
+-->
+
+<style>
+  /* ---------- 1. Design tokens ---------- */
+  :root{
+    --green:#006B3F; --green-dark:#063d25; --red:#CE1126;
+    --gold:#FCD116; --ink:#111; --muted:#5b6470;
+    --line:#e2e5ea; --bg:#fff; --surface:#f6f7f5; --surface-2:#eef1ee;
+    --radius:16px; --max:1120px;
+    --font:"Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);line-height:1.55;background:var(--bg)}
+  img{max-width:100%;height:auto;display:block}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer}
+
+  /* ---------- 2. Layout helpers ---------- */
+  .wrap{max-width:var(--max);margin-inline:auto;padding-inline:1rem}
+  .section{padding-block:3.5rem}
+  .eyebrow{font-size:.75rem;font-weight:800;letter-spacing:.18em;color:var(--red);text-transform:uppercase}
+  h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin:.75rem 0}
+  h2{font-size:clamp(1.5rem,3.5vw,2.1rem);line-height:1.15;margin:.5rem 0 0}
+  .muted{color:var(--muted)}
+  .grid-auto{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+
+  /* ---------- 3. Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    padding:.8rem 1.25rem;border-radius:8px;border:1px solid transparent;
+    font-weight:800;text-decoration:none;text-align:center;min-height:48px}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-green{background:var(--green);color:#fff}
+  .btn-outline{background:#fff;color:var(--ink);border-color:var(--line)}
+  .btn-gold{background:var(--gold);color:#000}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:focus-visible, a:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+  /* ---------- 4. Top bar + header ---------- */
+  .topbar{background:var(--ink);color:#fff;font-size:.8rem}
+  .topbar .wrap{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;padding-block:.5rem}
+  header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;justify-content:space-between;padding-block:.8rem}
+  .brand{font-weight:900;text-decoration:none}
+  nav{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem}
+  nav a{font-weight:600;text-decoration:none;padding:.4rem 0}
+  nav a:hover{text-decoration:underline}
+
+  /* ---------- 5. Hero ---------- */
+  .hero{background:#000;color:#fff;padding-block:3rem 3.5rem}
+  .hero .wrap{display:grid;gap:2rem}
+  @media(min-width:860px){ .hero .wrap{grid-template-columns:1.4fr 1fr;align-items:center} }
+  .pill{display:inline-block;padding:.4rem .8rem;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.12em}
+  .pill-gold{background:var(--gold);color:#000}
+  .pill-outline{border:1px solid rgba(255,255,255,.5)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:1.25rem}
+  .count-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+    border-radius:12px;padding:.9rem .25rem;text-align:center}
+  .count-box strong{display:block;font-size:clamp(1.4rem,4vw,2rem)}
+  .count-box span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+  .progress{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-top:1rem}
+  .progress > div{height:100%;background:var(--gold);width:0}
+
+  /* ---------- 6. Cards ---------- */
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem;background:#fff}
+  .card h3{margin:.25rem 0}
+  .stat b{display:block;font-size:1.6rem;color:var(--green)}
+  .stat span{color:var(--muted);font-size:.9rem}
+  .position-card{display:flex;flex-direction:column}
+  .position-card .btn{margin-top:auto}
+
+  /* ---------- 7. Form ---------- */
+  .form-shell{border:2px solid var(--green);border-radius:20px;padding:clamp(1rem,3vw,2rem);background:#fff}
+  .steps{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0;margin:0 0 1.5rem}
+  .steps li{padding:.45rem .8rem;border-radius:99px;background:var(--surface-2);font-weight:700;font-size:.85rem}
+  .steps li[aria-current="step"]{background:var(--green);color:#fff}
+  .field-grid{display:grid;gap:1rem}
+  @media(min-width:640px){ .field-grid{grid-template-columns:1fr 1fr} .span-2{grid-column:span 2} }
+  label{display:block;font-weight:700;margin-bottom:.35rem}
+  .field{width:100%;padding:.8rem;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+  .error-box{display:none;border:1px solid var(--red);background:#fff0f1;color:#7a0f1c;
+    border-radius:10px;padding:.9rem;font-weight:600;margin-bottom:1rem}
+  .error-box.show{display:block}
+  .form-nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;margin-top:1.5rem}
+  .upload{border:1.5px dashed var(--line);border-radius:12px;padding:1rem}
+  .upload small{display:block;color:var(--muted)}
+  .review{border:1px solid var(--line);border-radius:10px;padding:1rem;display:grid;gap:1rem}
+  @media(min-width:640px){ .review{grid-template-columns:1fr 1fr} }
+  .review dt{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .review dd{margin:.25rem 0 0;font-weight:600}
+  .checklist label{display:flex;gap:.6rem;align-items:flex-start;font-weight:500;cursor:pointer}
+  .checklist input{width:20px;height:20px;accent-color:var(--green);flex-shrink:0;margin-top:2px}
+
+  /* ---------- 7b. Images ---------- */
+  .photo{width:100%;height:100%;min-height:260px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--line)}
+  .hero{position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.62) 55%,rgba(0,0,0,.35) 100%)}
+  @media(max-width:640px){ .hero-overlay{background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.68))} }
+  .hero .wrap{position:relative}
+  .split{display:grid;gap:1.5rem;align-items:center}
+  @media(min-width:860px){ .split{grid-template-columns:1fr 1fr} }
+  .station{border:1px solid var(--line);border-radius:10px;padding:.9rem;background:#fff}
+  .station b{display:block;font-size:1.25rem}
+
+  /* ---------- 8. FAQ + fraud + footer ---------- */
+  .faq-item{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:.75rem}
+  .faq-item summary{padding:1rem;font-weight:800;cursor:pointer;list-style:none}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item p{margin:0;padding:0 1rem 1rem;color:var(--muted)}
+  .fraud{background:var(--red);color:#fff}
+  .fraud .wrap{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;padding-block:2.5rem}
+  .fraud .pill{background:#000;color:#fff}
+  footer{background:var(--ink);color:#fff}
+  footer .wrap{display:grid;gap:2rem;padding-block:3rem}
+  @media(min-width:760px){ footer .wrap{grid-template-columns:repeat(3,1fr)} }
+  footer a{display:block;color:rgba(255,255,255,.75);text-decoration:none;padding:.25rem 0}
+  .copyright{border-top:1px solid rgba(255,255,255,.15);text-align:center;
+    font-size:.75rem;color:rgba(255,255,255,.6);padding-block:1rem}
+
+  @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+
+  /* ---------- 9. Small phones (320px and up) ---------- */
+  /* Everything above is mobile-first by default. This block only
+     tightens the few things that get cramped under 480px. */
+  @media(max-width:480px){
+    .wrap{padding-inline:.85rem}
+    .section{padding-block:2.25rem}
+    .hero{padding-block:2rem 2.5rem}
+    .hero-actions .btn, .form-nav .btn{width:100%}
+    header .wrap{flex-direction:column;align-items:stretch}
+    header .btn{width:100%}
+    nav{justify-content:flex-start;gap:.25rem .9rem}
+    .countdown{grid-template-columns:1fr 1fr}   /* 2x2 instead of 4-in-a-row */
+    .photo{min-height:200px}
+    .steps li{font-size:.8rem;padding:.4rem .65rem}
+    .topbar .wrap{font-size:.75rem}
+  }
+  /* ---------- 10. Very wide screens ---------- */
+  /* Content never stretches edge-to-edge: .wrap caps at 1120px. */
+  body{overflow-x:clip}
+
+</style>
+</head>
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<div class="topbar"><div class="wrap">
+  <span><strong>GRA</strong> <span style="color:var(--gold)">•</span> CUSTOMS DIVISION</span>
+  <span>Official Portal <span style="color:var(--gold)">•</span> gra.gov.gh</span>
+  <span></span>
+</div></div>
+
+<!-- ================= HEADER ================= -->
+<header><div class="wrap">
+  <a class="brand" href="https://tobesubmittedforverificationgovgh.netlify.app/">GRA • CUSTOMS DIVISION</a>
+  <nav aria-label="Main">
+    <!-- TODO: LINK — replace "#" with the real destinations -->
+    <a href="#">Positions</a>
+    <a href="#">Eligibility</a>
+    <a href="https://tobesubmittedforverificationgovgh.netlify.app/">How to Apply</a>
+    <a href="#">FAQ</a>
+    <a href="#">Alert</a>
+  </nav>
+  <!-- TODO: LINK — header call to action -->
+  <a class="btn btn-red" href="https://tobesubmittedforverificationgovgh.netlify.app/">Start  Application →</a>
+</div></header>
+
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <!-- Hero photo: Customs Division officers on duty -->
+  <img class="hero-bg" src="images/hero-officers-on-duty.jpg" alt="Ghana Revenue Authority Customs Division officers on duty">
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="wrap">
+  <div>
+    <span class="pill pill-gold">CLOSES TODAY • SAT 7 NOV 2026 • 10:00 AM GMT</span>
+    <span class="pill pill-outline">OFFICIAL RECRUITMENT</span>
+    <h1>Serve Ghana at its ports, airports and borders.</h1>
+    <p class="muted" style="color:rgba(255,255,255,.85)">Join the Customs Division of the Ghana Revenue Authority. A service built on integrity, teamwork and professionalism — with skills in inspection, intelligence, compliance and operations.</p>
+    <div class="hero-actions">
+      <!-- TODO: LINK — hero calls to action -->
+      <a class="btn btn-red" href="https://tobesubmittedforverificationgovgh.netlify.app/">Start Application →</a>
+      <a class="btn btn-outline" href="#">View Positions</a>
+    </div>
+    <!-- Countdown. Updated by the script at the bottom. -->
+    <div class="countdown" role="timer" aria-label="Time remaining to apply">
+      <div class="count-box"><strong id="cd-days">--</strong><span>Days</span></div>
+      <div class="count-box"><strong id="cd-hours">--</strong><span>Hours</span></div>
+      <div class="count-box"><strong id="cd-mins">--</strong><span>Minutes</span></div>
+      <div class="count-box"><strong id="cd-secs">--</strong><span>Seconds</span></div>
+    </div>
+    <p id="cd-label" style="font-weight:700">Loading countdown…</p>
+    <div class="progress" aria-hidden="true"><div id="cd-bar"></div></div>
+    <p style="font-size:.85rem;opacity:.8">Application window: 1 October – 7 November 2026</p>
+  </div>
+  <div class="card" style="color:var(--ink)">
+    <p class="eyebrow">At a glance</p>
+    <div class="grid-auto" style="margin-top:1rem">
+      <div class="stat"><b>6</b><span>Positions open</span></div>
+      <div class="stat"><b>Nationwide</b><span>Postings</span></div>
+      <div class="stat"><b>100% Free</b><span>Application — no fee, no forms sold</span></div>
+      <div class="stat"><b>Training</b><span>Customs Training School</span></div>
+    </div>
+    <p class="muted" style="margin-top:1rem">Divisions represented: Operations, Prevention &amp; Support. Example postings: Tema • Accra • Aflao • Paga.</p>
+  </div>
+</div></section>
+
+<!-- ================= POSITIONS ================= -->
+<section class="section" id="positions"><div class="wrap">
+  <p class="eyebrow">Open roles</p>
+  <h2>Positions</h2>
+  <p class="muted"></p>
+
+  <div class="grid-auto" style="margin-top:1.5rem">
+    <!-- Position card. Copy this block to add a role. -->
+    <article class="card position-card">
+      <h3>Trainee Customs Officer I</h3>
+      <p class="muted">Frontline revenue, examination and border operations.</p>
+      <p><strong>Requirement:</strong> WASSCE with 6 credits incl. English &amp; Maths, or Diploma</p>
+      <p class="muted">Tema Port • Kotoka Airport • Aflao</p>
+      <!-- TODO: LINK — or keep the button behaviour (it pre-fills the form) -->
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="Trainee Customs Officer I">Use this position</button>
+    </article>
+
+    <article class="card position-card">
+      <h3>Assistant Inspector</h3>
+      <p class="muted">Supervision, intelligence support and compliance checks.</p>
+      <p><strong>Requirement:</strong> Degree / HND in a relevant field</p>
+      <p class="muted">Tema • Takoradi • Paga</p>
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="Assistant Inspector">Use this position</button>
+    </article>
+
+    <article class="card position-card">
+      <h3>Preventive Officer</h3>
+      <p class="muted">Anti-smuggling patrols, checkpoints and border surveillance.</p>
+      <p><strong>Requirement:</strong> WASSCE / Diploma + fitness assessment</p>
+      <p class="muted">Aflao • Paga • Elubo</p>
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="Preventive Officer">Use this position</button>
+    </article>
+
+    <article class="card position-card">
+      <h3>Administrative Officer</h3>
+      <p class="muted">Records, registry, correspondence and office coordination.</p>
+      <p><strong>Requirement:</strong> Degree / HND in Administration or related field</p>
+      <p class="muted">HQ Accra • Kumasi •Tamale</p>
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="Administrative Officer">Use this position</button>
+    </article>
+
+    <article class="card position-card">
+      <h3>Logistics &amp; Procurement Officer</h3>
+      <p class="muted">Fleet, stores, procurement and operational logistics.</p>
+      <p><strong>Requirement:</strong> Degree / HND in Procurement, Logistics or Supply Chain</p>
+      <p class="muted">Tema • HQ Accra • Takoradi</p>
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="Logistics &amp; Procurement Officer">Use this position</button>
+    </article>
+
+    <article class="card position-card">
+      <h3>ICT / Data Officer</h3>
+      <p class="muted">Systems, data quality, risk profiling and digital records.</p>
+      <p><strong>Requirement:</strong> Degree / HND in ICT, Computer Science or Statistics</p>
+      <p class="muted">HQ Accra • Tema • Kotoka Airport</p>
+      <button href="href="https://tobesubmittedforverificationgovgh.netlify.app/" type="button" data-position="ICT / Data Officer">Use this position</button>
+    </article>
+  </div>
+  <p id="position-note" role="status" style="font-weight:700;color:var(--green);min-height:1.5em"></p>
+</div></section>
+
+
+<!-- ================= WHY JOIN + DUTY STATIONS ================= -->
+<!-- These two blocks use the other two original photos. -->
+<section class="section" style="background:var(--surface-2)"><div class="wrap">
+  <div class="split">
+    <img class="photo" src="images/officers-in-accra.png" alt="Customs Division officers in uniform in Accra" loading="lazy">
+    <div>
+      <p class="eyebrow">Why join</p>
+      <h2>Discipline. Service. National impact.</h2>
+      <p class="muted">Customs officers safeguard lawful trade, stop smuggling, protect public safety and secure the revenue that funds Ghana&apos;s development.</p>
+      <ul style="display:grid;gap:.75rem;padding:0;list-style:none;margin:1.25rem 0 0">
+        <li>✓ A structured career with training and progression</li>
+        <li>✓ Work at ports, airports and land borders</li>
+        <li>✓ A service built on integrity, teamwork and professionalism</li>
+        <li>✓ Skills in inspection, intelligence, compliance and operations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="split" style="margin-top:2.5rem">
+    <div>
+      <p class="eyebrow">Where you could serve</p>
+      <h2>Duty stations across Ghana</h2>
+      <p class="muted">Final postings are determined by the Customs Division. These are the main gateways:</p>
+      <div class="grid-auto" style="margin-top:1rem">
+        <div class="station"><b>Tema</b><span class="muted">Sea Port</span></div>
+        <div class="station"><b>Kotoka</b><span class="muted">Airport</span></div>
+        <div class="station"><b>Aflao</b><span class="muted">Land Border</span></div>
+      </div>
+    </div>
+    <img class="photo" src="images/ghana-flag-tema-port.jpg" alt="Ghana flag and customs operations at Tema Port in Accra" loading="lazy">
+  </div>
+</div></section>
+
+<!-- ================= ELIGIBILITY + HOW TO APPLY ================= -->
+<section class="section" id="eligibility" style="background:var(--surface)"><div class="wrap">
+  <p class="eyebrow">Check yourself first</p>
+  <h2>Eligibility checklist</h2>
+  <p class="muted">Tick what applies to you. The bar shows how your profile lines up — it is a guide, not a decision.</p>
+
+  <div class="card checklist" style="margin-top:1.5rem">
+    <label><input type="checkbox" data-check> I am a Ghanaian citizen <span class="muted">— nationality is verified with your Ghana Card.</span></label>
+    <label><input type="checkbox" data-check> I am between 18 and 30 years old <span class="muted">— age is calculated from your date of birth.</span></label>
+    <label><input type="checkbox" data-check> I hold WASSCE, a diploma or a degree <span class="muted">— certificates are checked at screening.</span></label>
+    <label><input type="checkbox" data-check> I have no criminal record <span class="muted">— applicants must pass a background check.</span></label>
+    <label><input type="checkbox" data-check> I am medically fit <span class="muted">— a medical examination forms part of selection.</span></label>
+    <label><input type="checkbox" data-check> I can meet the height and fitness standard <span class="muted">— fitness is assessed during physical screening.</span></label>
+    <p><strong id="check-count">0 of 6 checked</strong></p>
+    <div class="progress" style="background:var(--surface-2)"><div id="check-bar" style="background:var(--green)"></div></div>
+    <p id="check-message" class="muted">Start the checklist to see how your profile lines up.</p>
+  </div>
+
+  <div id="how" style="margin-top:3rem">
+    <p class="eyebrow">The process</p>
+    <h2>How to apply</h2>
+    <div class="grid-auto" style="margin-top:1.5rem">
+      <div class="card"><h3>1. Create Account</h3><p class="muted">Start a local application draft with your personal details.</p></div>
+      <div class="card"><h3>2. Complete Form</h3><p class="muted">Add education, position and station preferences.</p></div>
+      <div class="card"><h3>3. Upload Documents</h3><p class="muted">Attach CV, certificate, Ghana Card and passport photo.</p></div>
+      <div class="card"><h3>4. Aptitude Test &amp; Screening</h3><p class="muted">Shortlisted applicants are invited for aptitude and screening.</p></div>
+      <div class="card"><h3>5. Medical &amp; Interview</h3><p class="muted">Final checks before training at the Customs Training School.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= APPLICATION FORM ================= -->
+<section class="section" id="apply"><div class="wrap">
+  <p class="eyebrow">Local draft — not a submission to GRA</p>
+  <h2>Application form</h2>
+  <p class="muted">This demo prepares a local acknowledgement preview. It does not send your application to GRA. Verify next steps on gra.gov.gh.</p>
+
+  <form id="apply-form" class="form-shell" style="margin-top:1.5rem" novalidate>
+    <ol class="steps" aria-label="Application steps">
+      <li data-step-label="1" aria-current="step">1. Personal</li>
+      <li data-step-label="2">2. Education</li>
+      <li data-step-label="3">3. Position &amp; Station</li>
+      <li data-step-label="4">4. Documents</li>
+      <li data-step-label="5">5. Review</li>
+    </ol>
+
+    <div id="form-errors" class="error-box" role="alert" aria-live="polite"></div>
+
+    <!-- STEP 1 -->
+   
+
+    <!-- STEP 2 -->
+    
+    <!-- STEP 3 -->
+   
+
+    <!-- STEP 4 -->
+  
+
+    
+  <!-- Acknowledgement. Hidden until the form is completed. -->
+  <div id="acknowledgement" class="form-shell" style="margin-top:1.5rem" hidden>
+    <p class="eyebrow">Local acknowledgement preview</p>
+    <h3>Draft prepared</h3>
+    <p class="muted">Your local preview is ready. Keep your Application ID for your records. This demo does not send your application to GRA.</p>
+    <p style="font-size:.75rem;font-weight:800;letter-spacing:.12em">APPLICATION ID</p>
+    <p id="ack-id" style="font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:var(--red);margin:0"></p>
+    <dl class="review" id="ack-list" style="margin-top:1rem"></dl>
+    <label class="muted" for="ack-text" style="display:block;margin-top:1rem">Application acknowledgement text</label>
+    <textarea class="field" id="ack-text" rows="3" readonly></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem">
+      <button class="btn btn-dark" type="button" id="btn-download">Download Acknowledgement (.txt)</button>
+      <button class="btn btn-outline" type="button" id="btn-copy">Copy Application ID</button>
+      <button class="btn" type="button" id="btn-restart" style="color:var(--green)">Start a new draft</button>
+    </div>
+    <p id="ack-message" role="status" style="font-weight:700;color:var(--green)"></p>
+  </div>
+</div></section>
+
+<!-- ================= FAQ + CHECKLIST ================= -->
+<section class="section" id="faq" style="background:var(--surface)"><div class="wrap">
+  <div style="display:grid;gap:2.5rem">
+    <div>
+      <p class="eyebrow">Before you apply</p>
+      <h2>Document checklist</h2>
+      <ul style="list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.75rem">
+        <li class="card" style="padding:1rem">✓ Curriculum Vitae (CV)</li>
+        <li class="card" style="padding:1rem">✓ WASSCE / Degree certificate</li>
+        <li class="card" style="padding:1rem">✓ Ghana Card (front and back)</li>
+        <li class="card" style="padding:1rem">✓ Passport-size photograph</li>
+        <li class="card" style="padding:1rem">✓ Birth certificate or valid ID</li>
+        <li class="card" style="padding:1rem">✓ Any professional certificates, if applicable</li>
+      </ul>
+      <p class="card" style="background:#fff7cc;margin-top:1rem"><strong>Tip:</strong> scan documents clearly. Blurred or cropped pages can delay verification.</p>
+    </div>
+    <div>
+      <p class="eyebrow">Questions</p>
+      <h2>Frequently asked questions</h2>
+      <div style="margin-top:1.5rem">
+        <details class="faq-item"><summary>Is the application free?</summary><p>Yes. The application is 100% free. GRA never charges a fee and does not sell forms. Anyone asking for payment is not acting for GRA.</p></details>
+        <details class="faq-item"><summary>Can I apply more than once?</summary><p>No. Submit one application for one preferred position. Duplicate applications can lead to disqualification.</p></details>
+        <details class="faq-item"><summary>Where is training held?</summary><p>Successful applicants train at the Customs Training School. Posting after training depends on operational needs.</p></details>
+        <details class="faq-item"><summary>Can I choose my duty station?</summary><p>You may list preferences in the form. Final postings are determined by the Customs Division.</p></details>
+        <details class="faq-item"><summary>What happens after I submit?</summary><p>This portal prepares a local acknowledgement preview with your Application ID. Keep it for your records and verify the next steps on gra.gov.gh.</p></details>
+        <details class="faq-item"><summary>What if I miss the deadline?</summary><p>Applications close on Sunday, 8 November 2026 at 10:00 AM GMT. The countdown on this page shows the remaining time.</p></details>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= FRAUD ALERT ================= -->
+<section class="fraud" id="fraud"><div class="wrap">
+  <div style="flex:1;min-width:min(100%,320px)">
+    <h2 style="margin:0">.</h2>
+    <p style="color:rgba(255,255,255,.9)">. </p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+    <span class="pill"></span>
+    <span class="pill pill-gold"></span>
+  </div>
+</div></section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer><div class="wrap">
+  <div>
+    <p style="font-weight:900;margin:0">GRA • CUSTOMS DIVISION</p>
+    <p style="color:rgba(255,255,255,.7)">Customs Division HQ<br>Liberia Road, Accra<br>gra.gov.gh</p>
+  </div>
+  <div>
+    <h3 style="margin:0">Quick links</h3>
+    <!-- TODO: LINK — footer links -->
+    <a href="#">Positions</a>
+    <a href="#">Eligibility</a>
+    <a href="https://tobesubmittedforverificationgovgh.netlify.app/">How to Apply</a>
+    <a href="https://tobesubmittedforverificationgovgh.netlify.app/">Application Form</a>
+  </div>
+  <div>
+    <h3 style="margin:0">Official disclaimer</h3>
+    <p style="color:rgba(255,255,255,.7);font-size:.9rem;line-height:1.6">.</p>
+  </div>
+</div>
+<div class="copyright">© 2026 Ghana Revenue Authority — Customs Division • recruitment portal • Deadline: Saturday, 7 November 2026, 10:00 AM GMT</div>
+</footer>
+
+<script>
+/* ==========================================================
+   All behaviour lives here, in plain JavaScript.
+   Sections: 1 countdown · 2 position buttons · 3 checklist
+             4 multi-step form · 5 acknowledgement
+   ========================================================== */
+"use strict";
+
+/* ---------- 1. Countdown ---------- */
+const DEADLINE = new Date("2026-11-07T10:00:00Z");   // Sun 8 Nov 2026, 10:00 AM GMT
+const WINDOW_START = new Date("2026-10-01T00:00:00Z");
+
+function tickCountdown() {
+  const now = new Date();
+  const left = Math.max(0, DEADLINE - now);
+  const days  = Math.floor(left / 86400000);
+  const hours = Math.floor(left % 86400000 / 3600000);
+  const mins  = Math.floor(left % 3600000 / 60000);
+  const secs  = Math.floor(left % 60000 / 1000);
+  const pad = (n) => String(n).padStart(2, "0");
+
+  document.getElementById("cd-days").textContent  = pad(days);
+  document.getElementById("cd-hours").textContent = pad(hours);
+  document.getElementById("cd-mins").textContent  = pad(mins);
+  document.getElementById("cd-secs").textContent  = pad(secs);
+  document.getElementById("cd-label").textContent =
+    now >= DEADLINE ? "Applications are closed." : `${days} DAYS LEFT`;
+
+  const progress = Math.min(100, Math.max(0,
+    (now - WINDOW_START) / (DEADLINE - WINDOW_START) * 100));
+  document.getElementById("cd-bar").style.width = progress + "%";
+}
+tickCountdown();
+setInterval(tickCountdown, 1000);
+
+/* ---------- 2. Position buttons pre-fill the form ---------- */
+const positionSelect = document.getElementById("position");
+document.querySelectorAll("[data-position]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    positionSelect.value = btn.dataset.position;
+    document.getElementById("position-note").textContent =
+      `Position draft set to ${btn.dataset.position}. Continue in the application form.`;
+    document.getElementById("apply").scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+/* ---------- 3. Eligibility checklist ---------- */
+const checks = [...document.querySelectorAll("[data-check]")];
+function tickChecklist() {
+  const done = checks.filter((c) => c.checked).length;
+  const pct = Math.round(done / checks.length * 100);
+  document.getElementById("check-count").textContent = `${done} of ${checks.length} checked`;
+  document.getElementById("check-bar").style.width = pct + "%";
+  document.getElementById("check-message").textContent =
+    pct === 100 ? "Strong match — all boxes ticked. Complete the form below."
+    : pct >= 67 ? "Good progress — keep going."
+    : pct >= 34 ? "A fair start — review the unchecked items."
+    : "Start the checklist to see how your profile lines up.";
+}
+checks.forEach((c) => c.addEventListener("change", tickChecklist));
+tickChecklist();
+
+/* ---------- 4. Multi-step form ---------- */
+const TOTAL_STEPS = 5;
+let currentStep = 1;
+const form = document.getElementById("apply-form");
+const errorBox = document.getElementById("form-errors");
+const formMessage = document.getElementById("form-message");
+
+// Fields that must be filled before leaving each step.
+const REQUIRED = {
+  1: ["fullName", "ghanaCard", "dob", "phone", "email", "region"],
+  2: ["qualification", "school", "year", "grades"],
+  3: ["position", "station1"],
+  4: ["file-cv", "file-card"],          // file inputs: checked by files.length
+  5: ["declaration"],                    // checkbox: checked
+};
+const FIELD_LABELS = {
+  fullName: "Full name", ghanaCard: "Ghana Card number", dob: "Date of birth",
+  phone: "Phone", email: "Email", region: "Region",
+  qualification: "Highest qualification", school: "School / institution",
+  year: "Completion year", grades: "Grades / subjects",
+  position: "Preferred position", station1: "First preference station",
+  "file-cv": "CV", "file-card": "Ghana Card",
+  declaration: "Declaration",
+};
+
+function fieldValue(id) {
+  const el = document.getElementById(id);
+  if (el.type === "checkbox") return el.checked;
+  if (el.type === "file") return el.files.length > 0;
+  return el.value.trim();
+}
+
+function validateStep(step) {
+  const missing = (REQUIRED[step] || [])
+    .filter((id) => !fieldValue(id))
+    .map((id) => FIELD_LABELS[id]);
+  if (missing.length) {
+    errorBox.innerHTML = "Please complete: <strong>" + missing.join(", ") + "</strong>";
+    errorBox.classList.add("show");
+    return false;
+  }
+  errorBox.classList.remove("show");
+  errorBox.innerHTML = "";
+  return true;
+}
+
+function showStep(step) {
+  currentStep = step;
+  document.querySelectorAll("[data-step]").forEach((panel) => {
+    panel.hidden = Number(panel.dataset.step) !== step;
+  });
+  document.querySelectorAll("[data-step-label]").forEach((li, i) => {
+    li.toggleAttribute("aria-current", i + 1 === step ? "step" : false);
+  });
+  document.getElementById("btn-back").disabled = step === 1;
+  document.getElementById("btn-next").hidden = step === TOTAL_STEPS;
+  document.getElementById("btn-submit").hidden = step !== TOTAL_STEPS;
+  if (step === TOTAL_STEPS) buildReview();
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function buildReview() {
+  const get = (id) => document.getElementById(id).value || "—";
+  const fileName = (id) => {
+    const el = document.getElementById(id);
+    return el.files.length ? el.files[0].name : "—";
+  };
+  const rows = [
+    ["Full name", get("fullName")], ["Ghana Card", get("ghanaCard")],
+    ["Date of birth", get("dob")], ["Phone", get("phone")], ["Email", get("email")],
+    ["Region", get("region")], ["Qualification", get("qualification")],
+    ["School", get("school")], ["Completion year", get("year")],
+    ["Grades", get("grades")], ["Position", get("position")],
+    ["First preference", get("station1")], ["Second preference", get("station2")],
+    ["CV", fileName("file-cv")], ["Certificate", fileName("file-certificate")],
+    ["Ghana Card file", fileName("file-card")], ["Passport photo", fileName("file-photo")],
+    ["Notes", get("notes")],
+  ];
+  document.getElementById("review-list").innerHTML = rows.map(([label, value]) =>
+    `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+}
+
+document.getElementById("btn-next").addEventListener("click", () => {
+  if (validateStep(currentStep)) showStep(Math.min(TOTAL_STEPS, currentStep + 1));
+});
+document.getElementById("btn-back").addEventListener("click", () => {
+  errorBox.classList.remove("show");
+  showStep(Math.max(1, currentStep - 1));
+});
+
+// Show the chosen file name next to each upload.
+document.querySelectorAll('input[type="file"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    input.closest(".upload").querySelector("[data-file-name]").textContent =
+      input.files.length ? "Selected: " + input.files[0].name : "No file selected yet";
+  });
+});
+
+/* ---------- 5. Acknowledgement ---------- */
+function makeApplicationId() {
+  return "GRA-CUS-2026-" + Math.floor(100000 + Math.random() * 900000);
+}
+
+document.getElementById("btn-submit").addEventListener("click", () => {
+  if (!validateStep(TOTAL_STEPS)) return;
+  const id = makeApplicationId();
+  const get = (id) => document.getElementById(id).value || "—";
+  const ackRows = [
+    ["Name", get("fullName")], ["Position", get("position")],
+    ["First preference", get("station1")], ["Region", get("region")],
+  ];
+  document.getElementById("ack-id").textContent = id;
+  document.getElementById("ack-list").innerHTML = ackRows.map(([label, value]) =>
+    `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+  document.getElementById("ack-text").value =
+    `GRA Customs Division — Application acknowledgement\nApplication ID: ${id}\nName: ${get("fullName")}\nPosition: ${get("position")}\nFirst preference: ${get("station1")}\nRegion: ${get("region")}\n\nThis is a local preview. It is not a submission to GRA. Verify next steps on gra.gov.gh.`;
+  document.getElementById("acknowledgement").hidden = false;
+  formMessage.textContent = "Draft prepared — see your acknowledgement below.";
+  document.getElementById("acknowledgement").scrollIntoView({ behavior: "smooth" });
+});
+
+document.getElementById("btn-download").addEventListener("click", () => {
+  const text = document.getElementById("ack-text").value;
+  const id = document.getElementById("ack-id").textContent;
+  const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = `${id}-acknowledgement.txt`; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  document.getElementById("ack-message").textContent = "Acknowledgement downloaded.";
+});
+
+document.getElementById("btn-copy").addEventListener("click", async () => {
+  const id = document.getElementById("ack-id").textContent;
+  try { await navigator.clipboard.writeText(id); }
+  catch { /* clipboard blocked — user can copy from the text box */ }
+  document.getElementById("ack-message").textContent = "Application ID copied: " + id;
+});
+
+document.getElementById("btn-restart").addEventListener("click", () => {
+  form.reset();
+  document.querySelectorAll("[data-file-name]").forEach((el) => el.textContent = "");
+  document.getElementById("acknowledgement").hidden = true;
+  document.getElementById("ack-message").textContent = "";
+  formMessage.textContent = "";
+  showStep(1);
+});
+</script>
+</body>
+</html>
